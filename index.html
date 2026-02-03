@@ -49,7 +49,7 @@
             max-width: 600px;
         }
 
-        h1 { color: #d63031; }
+        h1 { color: #d63031; margin-bottom: 10px; }
         p { color: #636e72; line-height: 1.6; }
 
         /* THE SLIDESHOW CONTAINER */
@@ -61,10 +61,10 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             transform: rotate(-3deg);
             margin: 20px 0;
-	    position: relative; /* Needed for stacking images */
+            position: relative; /* Needed for stacking images */
         }
         
-	/* Styles for the images inside the frame */
+        /* Styles for the images inside the frame */
         .slide {
             width: 100%; 
             height: 100%; 
@@ -78,7 +78,7 @@
             height: calc(100% - 20px);
         }
 
-	/* The class we add to show an image */
+        /* The class we add to show an image */
         .slide.active {
             opacity: 1;
         }
@@ -107,16 +107,20 @@
 
     <div id="main-content">
         <h1>Happy Valentine's Day, My Angel! 🌹</h1>
+        
         <div class="photo-frame">
-            <img src="us.jpg" alt="Us">
+            <img src="us1.jpg" class="slide active" alt="Memory 1">
+            <img src="us2.jpg" class="slide" alt="Memory 2">
+            <img src="us3.jpg" class="slide" alt="Memory 3">
         </div>
+
         <p>
-            I know I am not the most romantic, and I have made you doubt me 		countless times.
-	I want you to know that, life has been sweet and smooth with you, and of 	course; I'M JUST GETTING STARTED.
-	This is me saying I LOVE YOU from my brain and you will always be dear to 	me.     
-	This is a season of love, remember I am your certified clown and always 	will be. 
-	 I LOVE YOU FROM MY BRAIN!!!!!!!
- 	</p>
+            I know I am not the most romantic, and I have made you doubt me countless times.<br>
+            I want you to know that, life has been sweet and smooth with you, and of course; I'M JUST GETTING STARTED.<br>
+            This is me saying I LOVE YOU from my brain and you will always be dear to me.<br>      
+            This is a season of love, remember I am your certified clown and always will be.<br> 
+            I LOVE YOU FROM MY BRAIN!!!!!!!
+        </p>
         <p>P.S. Your promise ring is gonna come.</p>
     </div>
 
@@ -125,6 +129,10 @@
     </audio>
 
     <script>
+        // FIXED: Added variables for the slideshow
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
         function startExperience() {
             // Hide welcome, show content
             document.getElementById('welcome-screen').style.display = 'none';
@@ -135,6 +143,16 @@
 
             // Start Hearts Animation
             setInterval(createHeart, 300);
+
+            // FIXED: Start the Slideshow Timer (Every 3 seconds)
+            setInterval(nextSlide, 3000);
+        }
+
+        // FIXED: Added the function to switch photos
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
         }
 
         function createHeart() {
@@ -151,5 +169,4 @@
         }
     </script>
 </body>
-
 </html>
