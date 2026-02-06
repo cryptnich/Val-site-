@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Fine Wine ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background:#ffe6e6; /*a light pink background */
+            /* NEW: Changed font to Handwriting style */
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem; 
+            background: #ffe6e6; /* light pink background */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,6 +30,7 @@
         button {
             padding: 15px 30px;
             font-size: 1.2rem;
+            font-family: 'Dancing Script', cursive; /* Matches the new font */
             background-color: #ff4d4d;
             color: white;
             border: none;
@@ -61,24 +66,22 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             transform: rotate(-3deg);
             margin: 20px 0;
-            position: relative; /* Needed for stacking images */
+            position: relative; 
         }
         
-        /* Styles for the images inside the frame */
         .slide {
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            position: absolute; /* Stacks them on top of each other */
-            top: 10px; /* Accounts for padding */
-            left: 10px; /* Accounts for padding */
-            opacity: 0; /* Hidden by default */
-            transition: opacity 1s ease-in-out; /* Smooth fade effect */
+            position: absolute; 
+            top: 10px; 
+            left: 10px; 
+            opacity: 0; 
+            transition: opacity 1s ease-in-out; 
             width: calc(100% - 20px);
             height: calc(100% - 20px);
         }
 
-        /* The class we add to show an image */
         .slide.active {
             opacity: 1;
         }
@@ -95,6 +98,21 @@
         @keyframes float {
             0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
             100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* NEW: Styles for the Proposal Buttons */
+        .proposal-box {
+            margin-top: 20px;
+        }
+        .yes-btn {
+            background-color: #00cec9; 
+            margin: 10px;
+        }
+        .no-btn {
+            background-color: #ff7675; 
+            margin: 10px;
+            position: relative; /* Allows it to move */
+            transition: 0.1s; /* Moves instantly */
         }
     </style>
 </head>
@@ -122,6 +140,12 @@
             I LOVE YOU FROM MY BRAIN!!!!!!!
         </p>
         <p>P.S. Your promise ring is gonna come.</p>
+
+        <div class="proposal-box">
+            <h3>Will you be my Valentine? 🥺</h3>
+            <button class="yes-btn" onclick="alert('Yay! See you on the 14th! ❤️')">YES</button>
+            <button class="no-btn" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">NO</button>
+        </div>
     </div>
 
     <audio id="bg-music" loop>
@@ -129,26 +153,17 @@
     </audio>
 
     <script>
-        // FIXED: Added variables for the slideshow
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
 
         function startExperience() {
-            // Hide welcome, show content
             document.getElementById('welcome-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'flex';
-            
-            // Play Music
             document.getElementById('bg-music').play();
-
-            // Start Hearts Animation
             setInterval(createHeart, 300);
-
-            // FIXED: Start the Slideshow Timer (Every 3 seconds)
             setInterval(nextSlide, 3000);
         }
 
-        // FIXED: Added the function to switch photos
         function nextSlide() {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
@@ -167,8 +182,17 @@
                 heart.remove();
             }, 5000);
         }
+
+        // NEW: Function to make the NO button run away
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - 100); // Random X position
+            const y = Math.random() * (window.innerHeight - 100); // Random Y position
+            
+            noBtn.style.position = 'fixed'; // Breaks it out of the layout
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
     </script>
 </body>
 </html>
-
-
