@@ -21,7 +21,7 @@
             text-align: center;
         }
 
-        /* SCREEN 1: Welcome */
+        /* --- SCREEN 1: WELCOME --- */
         #welcome-screen {
             z-index: 10;
             display: flex;
@@ -29,7 +29,7 @@
             align-items: center;
         }
 
-        /* SCREEN 2: Proposal */
+        /* --- SCREEN 2: PROPOSAL --- */
         #proposal-screen {
             display: none;
             flex-direction: column;
@@ -37,23 +37,35 @@
             z-index: 10;
         }
 
-        /* SCREEN 3: Main Content */
-        #main-content {
+        /* --- SCREEN 3: MAIN APP WRAPPER (Hidden until YES) --- */
+        #post-proposal-view {
             display: none;
             flex-direction: column;
             align-items: center;
             z-index: 5;
             padding: 20px;
             max-width: 600px;
-            /* Scrollable if content gets too long on small phones */
-            overflow-y: auto; 
-            max-height: 90vh;
+            width: 100%;
+            height: 100vh; /* Full height */
+            justify-content: center;
         }
+
+        /* The Content Box (Scrollable area below images) */
+        .content-area {
+            width: 100%;
+            overflow-y: auto;
+            max-height: 50vh; /* Takes up bottom half */
+            padding-bottom: 50px;
+        }
+
+        /* SECTIONS WITHIN THE CONTENT AREA */
+        #letter-section { display: block; } /* Visible first */
+        #reasons-section { display: none; } /* Hidden first */
 
         /* BUTTON STYLES */
         button {
-            padding: 15px 30px;
-            font-size: 1.3rem; 
+            padding: 12px 25px;
+            font-size: 1.2rem; 
             font-family: 'Dancing Script', cursive;
             border: none;
             border-radius: 50px;
@@ -65,30 +77,21 @@
         .open-btn { background-color: #ff4d4d; color: white; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4); }
         .yes-btn { background-color: #00cec9; color: white; box-shadow: 0 4px 15px rgba(0, 206, 201, 0.4); }
         .no-btn { background-color: #ff7675; color: white; position: relative; transition: 0.1s; }
-        
-        /* Reason Generator Button Style */
-        .reason-btn {
-            background-color: #6c5ce7; 
-            color: white;
-            font-size: 1rem;
-            margin-top: 30px; /* Added extra space above the button */
-            margin-bottom: 10px;
-            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.4);
-        }
+        .nav-btn { background-color: #0984e3; color: white; font-size: 1rem; margin-top: 15px; }
+        .reason-btn { background-color: #6c5ce7; color: white; font-size: 1rem; margin-top: 15px; }
 
-        h1 { color: #0984e3; margin-bottom: 10px; }
+        h1 { color: #0984e3; margin-bottom: 5px; font-size: 1.8rem; }
         
         /* TYPEWRITER TEXT STYLE */
         #typewriter-text {
             color: #2d3436; 
             line-height: 1.6;
             min-height: 100px; 
-            font-size: 1.3rem;
-            white-space: pre-wrap; /* Keeps line breaks */
+            white-space: pre-wrap; 
             margin-bottom: 10px;
         }
 
-        /* SLIDESHOW STYLES */
+        /* SLIDESHOW STYLES (Fixed at top of post-proposal view) */
         .photo-frame {
             width: 250px;
             height: 250px;
@@ -96,7 +99,7 @@
             padding: 10px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             transform: rotate(-3deg);
-            margin: 10px 0;
+            margin-bottom: 20px;
             position: relative; 
             flex-shrink: 0; 
         }
@@ -119,13 +122,7 @@
             100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
         
-        /* REASON TEXT STYLE */
-        #reason-display {
-            color: #d63031;
-            font-weight: bold;
-            margin-top: 5px;
-            min-height: 30px;
-        }
+        #reason-display { color: #d63031; font-weight: bold; margin-top: 10px; min-height: 30px; }
     </style>
 </head>
 <body>
@@ -139,12 +136,12 @@
         <h1>Will you be my Valentine? 🥺</h1>
         <p>(You have no choice lol)</p>
         <div>
-            <button class="yes-btn" onclick="showLetter()">YES! 😍</button>
+            <button class="yes-btn" onclick="showMainView()">YES! 😍</button>
             <button class="no-btn" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">NO 😢</button>
         </div>
     </div>
 
-    <div id="main-content">
+    <div id="post-proposal-view">
         <h1>Happy Valentine's Day! 💙</h1>
         
         <div class="photo-frame">
@@ -153,12 +150,24 @@
             <img src="us3.jpg" class="slide" alt="Memory 3">
         </div>
 
-        <p id="typewriter-text"></p>
+        <div class="content-area">
+            
+            <div id="letter-section">
+                <p id="typewriter-text"></p>
+                <button class="nav-btn" onclick="goToReasons()">See Why I Love You &rarr;</button>
+            </div>
 
-        <button class="reason-btn" onclick="showReason()">Why I Love You (Click Me) 🎲</button>
-        <p id="reason-display"></p>
+            <div id="reasons-section">
+                <p>There are a million reasons, but here are a few:</p>
+                <button class="reason-btn" onclick="showReason()">Click for a Reason 🎲</button>
+                <p id="reason-display"></p>
+                
+                <p style="margin-top: 30px; font-size: 0.9rem; color: #636e72;">P.S. Your promise ring is gonna come.</p>
+                
+                <button class="nav-btn" style="background: #b2bec3; font-size: 0.8rem;" onclick="goBackToLetter()">&larr; Read Letter Again</button>
+            </div>
 
-        <p style="margin-top: 30px; font-size: 0.9rem; color: #636e72;">P.S. Your promise ring is gonna come.</p>
+        </div>
     </div>
 
     <audio id="bg-music" loop>
@@ -170,10 +179,8 @@
         const slides = document.querySelectorAll('.slide');
         
         // --- CONFIGURATION ---
-        // 1. THE LETTER 
         const fullLetter = "Hey Boo Boo,\n\nI want you to know that, life has been sweet and smooth with you, and of course; I'M JUST GETTING STARTED.\n\nThis is me saying I LOVE YOU from my brain and you will always be dear to me.\n\nThis is a season of love, remember I am your certified clown and always will be.\n\nI LOVE YOU FROM MY BRAIN!!!!!!!";
         
-        // 2. THE REASONS LIST
         const reasons = [
             "Because you make me laugh even when I'm stressed.",
             "Because you have the most beautiful smile.",
@@ -183,7 +190,7 @@
             "Because you are simply YOU."
         ];
 
-        // --- FUNCTIONS ---
+        // --- NAVIGATION FUNCTIONS ---
 
         function startProposal() {
             document.getElementById('welcome-screen').style.display = 'none';
@@ -191,19 +198,30 @@
             document.getElementById('bg-music').play();
         }
 
-        function showLetter() {
+        function showMainView() {
             document.getElementById('proposal-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'flex';
+            document.getElementById('post-proposal-view').style.display = 'flex';
 
             // Start animations
             setInterval(createHeart, 300);
             setInterval(nextSlide, 3000);
             
-            // Start Typewriter effect
+            // Start Typewriter
             typeWriter();
         }
 
-        // TYPEWRITER EFFECT LOGIC
+        function goToReasons() {
+            document.getElementById('letter-section').style.display = 'none';
+            document.getElementById('reasons-section').style.display = 'block';
+        }
+
+        function goBackToLetter() {
+            document.getElementById('reasons-section').style.display = 'none';
+            document.getElementById('letter-section').style.display = 'block';
+        }
+
+        // --- LOGIC FUNCTIONS ---
+
         let i = 0;
         function typeWriter() {
             if (i < fullLetter.length) {
@@ -213,20 +231,17 @@
             }
         }
 
-        // REASON GENERATOR LOGIC
         function showReason() {
             const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
             document.getElementById("reason-display").innerText = randomReason;
         }
 
-        // SLIDESHOW LOGIC
         function nextSlide() {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
         }
 
-        // HEART RAIN LOGIC
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -237,7 +252,6 @@
             setTimeout(() => { heart.remove(); }, 5000);
         }
 
-        // RUNAWAY BUTTON LOGIC
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
             const x = Math.random() * (window.innerWidth - 100);
