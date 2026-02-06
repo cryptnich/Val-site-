@@ -10,10 +10,9 @@
         body {
             margin: 0;
             padding: 0;
-            /* NEW: Changed font to Handwriting style */
             font-family: 'Dancing Script', cursive;
             font-size: 1.2rem; 
-            background: #ffe6e6; /* light pink background */
+            background: #e6f7ff; /* Light blue */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,29 +21,23 @@
             text-align: center;
         }
 
-        /* The Welcome Screen */
+        /* SCREEN 1: Welcome */
         #welcome-screen {
             z-index: 10;
-        }
-        
-        button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-family: 'Dancing Script', cursive; /* Matches the new font */
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
-            transition: transform 0.2s;
-        }
-        
-        button:active {
-            transform: scale(0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* The Main Content (Hidden initially) */
+        /* SCREEN 2: Proposal */
+        #proposal-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* SCREEN 3: Main Content */
         #main-content {
             display: none;
             flex-direction: column;
@@ -52,67 +45,83 @@
             z-index: 5;
             padding: 20px;
             max-width: 600px;
+            /* Scrollable if content gets too long on small phones */
+            overflow-y: auto; 
+            max-height: 90vh;
         }
 
-        h1 { color: #d63031; margin-bottom: 10px; }
-        p { color: #636e72; line-height: 1.6; }
+        /* BUTTON STYLES */
+        button {
+            padding: 15px 30px;
+            font-size: 1.3rem; 
+            font-family: 'Dancing Script', cursive;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+        button:active { transform: scale(0.95); }
+        .open-btn { background-color: #ff4d4d; color: white; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4); }
+        .yes-btn { background-color: #00cec9; color: white; box-shadow: 0 4px 15px rgba(0, 206, 201, 0.4); }
+        .no-btn { background-color: #ff7675; color: white; position: relative; transition: 0.1s; }
+        
+        /* Reason Generator Button Style */
+        .reason-btn {
+            background-color: #6c5ce7; 
+            color: white;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
 
-        /* THE SLIDESHOW CONTAINER */
+        h1 { color: #0984e3; margin-bottom: 10px; }
+        
+        /* TYPEWRITER TEXT STYLE */
+        #typewriter-text {
+            color: #2d3436; 
+            line-height: 1.6;
+            min-height: 150px; /* Reserves space so layout doesn't jump */
+            font-size: 1.3rem;
+            white-space: pre-wrap; /* Keeps line breaks */
+        }
+
+        /* SLIDESHOW STYLES */
         .photo-frame {
-            width: 280px;
-            height: 280px;
+            width: 250px;
+            height: 250px;
             background-color: white;
             padding: 10px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             transform: rotate(-3deg);
-            margin: 20px 0;
+            margin: 10px 0;
             position: relative; 
+            flex-shrink: 0; /* Prevents shrinking on small screens */
         }
-        
         .slide {
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            position: absolute; 
-            top: 10px; 
-            left: 10px; 
-            opacity: 0; 
-            transition: opacity 1s ease-in-out; 
-            width: calc(100% - 20px);
-            height: calc(100% - 20px);
+            width: 100%; height: 100%; object-fit: cover; 
+            position: absolute; top: 10px; left: 10px; 
+            opacity: 0; transition: opacity 1s ease-in-out; 
+            width: calc(100% - 20px); height: calc(100% - 20px);
         }
+        .slide.active { opacity: 1; }
 
-        .slide.active {
-            opacity: 1;
-        }
-
-        /* Floating Hearts Animation */
+        /* HEARTS ANIMATION */
         .heart {
-            position: absolute;
-            color: #ff7675;
+            position: absolute; color: #74b9ff;
             animation: float 4s infinite ease-in;
-            opacity: 0;
-            z-index: 1;
+            opacity: 0; z-index: 1;
         }
-
         @keyframes float {
             0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
             100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
-
-        /* NEW: Styles for the Proposal Buttons */
-        .proposal-box {
-            margin-top: 20px;
-        }
-        .yes-btn {
-            background-color: #00cec9; 
-            margin: 10px;
-        }
-        .no-btn {
-            background-color: #ff7675; 
-            margin: 10px;
-            position: relative; /* Allows it to move */
-            transition: 0.1s; /* Moves instantly */
+        
+        /* REASON TEXT STYLE */
+        #reason-display {
+            color: #d63031;
+            font-weight: bold;
+            margin-top: 10px;
+            min-height: 30px;
         }
     </style>
 </head>
@@ -120,11 +129,20 @@
 
     <div id="welcome-screen">
         <h1>I have a surprise for you...</h1>
-        <button onclick="startExperience()">Click to Open ❤️</button>
+        <button class="open-btn" onclick="startProposal()">Click to Open 💙</button>
+    </div>
+
+    <div id="proposal-screen">
+        <h1>Will you be my Valentine? 🥺</h1>
+        <p>(You have no choice lol)</p>
+        <div>
+            <button class="yes-btn" onclick="showLetter()">YES! 😍</button>
+            <button class="no-btn" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">NO 😢</button>
+        </div>
     </div>
 
     <div id="main-content">
-        <h1>Happy Valentine's Day, My Angel! 🌹</h1>
+        <h1>Happy Valentine's Day! 💙</h1>
         
         <div class="photo-frame">
             <img src="us1.jpg" class="slide active" alt="Memory 1">
@@ -132,20 +150,12 @@
             <img src="us3.jpg" class="slide" alt="Memory 3">
         </div>
 
-        <p>
-            Hey Boo Boo<br>
-            I want you to know that, life has been sweet and smooth with you, and of course; I'M JUST GETTING STARTED.<br>
-            This is me saying I LOVE YOU from my brain and you will always be dear to me.<br>      
-            This is a season of love, remember I am your certified clown and always will be.<br> 
-            I LOVE YOU FROM MY BRAIN!!!!!!!
-        </p>
-        <p>P.S. Your promise ring is gonna come.</p>
+        <p id="typewriter-text"></p>
 
-        <div class="proposal-box">
-            <h3>Will you be my Valentine? 🥺</h3>
-            <button class="yes-btn" onclick="alert('Yay! See you on the 14th! ❤️')">YES</button>
-            <button class="no-btn" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">NO</button>
-        </div>
+        <button class="reason-btn" onclick="showReason()">Why I Love You (Click Me) 🎲</button>
+        <p id="reason-display"></p>
+
+        <p style="margin-top: 20px; font-size: 0.9rem; color: #636e72;">P.S. Your promise ring is gonna come.</p>
     </div>
 
     <audio id="bg-music" loop>
@@ -155,41 +165,81 @@
     <script>
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
+        
+        // --- CONFIGURATION ---
+        // 1. THE LETTER (Use \n for new lines)
+        const fullLetter = "Hey Boo Boo,\n\nI want you to know that, life has been sweet and smooth with you, and of course; I'M JUST GETTING STARTED.\n\nThis is me saying I LOVE YOU from my brain and you will always be dear to me.\n\nThis is a season of love, remember I am your certified clown and always will be.\n\nI LOVE YOU FROM MY BRAIN!!!!!!!";
+        
+        // 2. THE REASONS LIST
+        const reasons = [
+            "Because you make me laugh even when I'm stressed.",
+            "Because you have the most beautiful smile.",
+            "Because you support my dreams.",
+            "Because you tolerate my clowning!",
+            "Because you are my peace.",
+            "Because you are simply YOU."
+        ];
 
-        function startExperience() {
+        // --- FUNCTIONS ---
+
+        function startProposal() {
             document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'flex';
+            document.getElementById('proposal-screen').style.display = 'flex';
             document.getElementById('bg-music').play();
-            setInterval(createHeart, 300);
-            setInterval(nextSlide, 3000);
         }
 
+        function showLetter() {
+            document.getElementById('proposal-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+
+            // Start animations
+            setInterval(createHeart, 300);
+            setInterval(nextSlide, 3000);
+            
+            // Start Typewriter effect
+            typeWriter();
+        }
+
+        // TYPEWRITER EFFECT LOGIC
+        let i = 0;
+        function typeWriter() {
+            if (i < fullLetter.length) {
+                document.getElementById("typewriter-text").innerHTML += fullLetter.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50); // Speed of typing (50ms)
+            }
+        }
+
+        // REASON GENERATOR LOGIC
+        function showReason() {
+            const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+            document.getElementById("reason-display").innerText = randomReason;
+        }
+
+        // SLIDESHOW LOGIC
         function nextSlide() {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
         }
 
+        // HEART RAIN LOGIC
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.innerHTML = '❤️';
+            heart.innerHTML = '💙';
             heart.style.left = Math.random() * 100 + "vw";
             heart.style.animationDuration = Math.random() * 2 + 3 + "s";
             document.body.appendChild(heart);
-            
-            setTimeout(() => {
-                heart.remove();
-            }, 5000);
+            setTimeout(() => { heart.remove(); }, 5000);
         }
 
-        // NEW: Function to make the NO button run away
+        // RUNAWAY BUTTON LOGIC
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - 100); // Random X position
-            const y = Math.random() * (window.innerHeight - 100); // Random Y position
-            
-            noBtn.style.position = 'fixed'; // Breaks it out of the layout
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
+            noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
         }
